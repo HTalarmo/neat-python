@@ -1,98 +1,161 @@
-"""
-Has the built-in activation functions,
-code for using them,
-and code for adding new user-defined ones
-"""
+# """
+# Has the built-in activation functions,
+# code for using them,
+# and code for adding new user-defined ones
+# """
 from __future__ import division
-import math
+# import math
 import types
+#
+#
+# def sigmoid_activation(z):
+#     z = max(-60.0, min(60.0, 5.0 * z))
+#     return 1.0 / (1.0 + math.exp(-z))
+#
+#
+# def tanh_activation(z):
+#     z = max(-60.0, min(60.0, 2.5 * z))
+#     return math.tanh(z)
+#
+#
+# def sin_activation(z):
+#     z = max(-60.0, min(60.0, 5.0 * z))
+#     return math.sin(z)
+#
+#
+# def gauss_activation(z):
+#     z = max(-3.4, min(3.4, z))
+#     return math.exp(-5.0 * z ** 2)
+#
+#
+# def relu_activation(z):
+#     return z if z > 0.0 else 0.0
+#
+#
+# def elu_activation(z):
+#     return z if z > 0.0 else math.exp(z) - 1
+#
+#
+# def lelu_activation(z):
+#     leaky = 0.005
+#     return z if z > 0.0 else leaky * z
+#
+#
+# def selu_activation(z):
+#     lam = 1.0507009873554804934193349852946
+#     alpha = 1.6732632423543772848170429916717
+#     return lam * z if z > 0.0 else lam * alpha * (math.exp(z) - 1)
+#
+#
+# def softplus_activation(z):
+#     z = max(-60.0, min(60.0, 5.0 * z))
+#     return 0.2 * math.log(1 + math.exp(z))
+#
+#
+# def identity_activation(z):
+#     return z
+#
+#
+# def clamped_activation(z):
+#     return max(-1.0, min(1.0, z))
+#
+#
+# def inv_activation(z):
+#     try:
+#         z = 1.0 / z
+#     except ArithmeticError:  # handle overflows
+#         return 0.0
+#     else:
+#         return z
+#
+#
+# def log_activation(z):
+#     z = max(1e-7, z)
+#     return math.log(z)
+#
+#
+# def exp_activation(z):
+#     z = max(-60.0, min(60.0, z))
+#     return math.exp(z)
+#
+#
+# def abs_activation(z):
+#     return abs(z)
+#
+#
+# def hat_activation(z):
+#     return max(0.0, 1 - abs(z))
+#
+#
+# def square_activation(z):
+#     return z ** 2
+#
+#
+# def cube_activation(z):
+#     return z ** 3
+#
+#
+
+# Copyright (c) 2018 Uber Technologies, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+#
+# This file was modified by github.com/crisbodnar to add TensorFlow support
+
+import tensorflow as tf
 
 
-def sigmoid_activation(z):
-    z = max(-60.0, min(60.0, 5.0 * z))
-    return 1.0 / (1.0 + math.exp(-z))
+def sigmoid_activation(x):
+    return tf.sigmoid(5 * x)
 
 
-def tanh_activation(z):
-    z = max(-60.0, min(60.0, 2.5 * z))
-    return math.tanh(z)
+def tanh_activation(x):
+    return tf.tanh(2.5 * x)
 
 
-def sin_activation(z):
-    z = max(-60.0, min(60.0, 5.0 * z))
-    return math.sin(z)
+def abs_activation(x):
+    return tf.abs(x)
 
 
-def gauss_activation(z):
-    z = max(-3.4, min(3.4, z))
-    return math.exp(-5.0 * z ** 2)
+def gauss_activation(x):
+    return tf.exp(-5.0 * x**2)
 
 
-def relu_activation(z):
-    return z if z > 0.0 else 0.0
+def identity_activation(x):
+    return x
 
 
-def elu_activation(z):
-    return z if z > 0.0 else math.exp(z) - 1
+def sin_activation(x):
+    return tf.sin(x)
 
 
-def lelu_activation(z):
-    leaky = 0.005
-    return z if z > 0.0 else leaky * z
+def relu_activation(x):
+    return tf.nn.relu(x)
+
+def stepped_activation(x):
+    return tf.round(x)
 
 
-def selu_activation(z):
-    lam = 1.0507009873554804934193349852946
-    alpha = 1.6732632423543772848170429916717
-    return lam * z if z > 0.0 else lam * alpha * (math.exp(z) - 1)
-
-
-def softplus_activation(z):
-    z = max(-60.0, min(60.0, 5.0 * z))
-    return 0.2 * math.log(1 + math.exp(z))
-
-
-def identity_activation(z):
-    return z
-
-
-def clamped_activation(z):
-    return max(-1.0, min(1.0, z))
-
-
-def inv_activation(z):
-    try:
-        z = 1.0 / z
-    except ArithmeticError:  # handle overflows
-        return 0.0
-    else:
-        return z
-
-
-def log_activation(z):
-    z = max(1e-7, z)
-    return math.log(z)
-
-
-def exp_activation(z):
-    z = max(-60.0, min(60.0, z))
-    return math.exp(z)
-
-
-def abs_activation(z):
-    return abs(z)
-
-
-def hat_activation(z):
-    return max(0.0, 1 - abs(z))
-
-
-def square_activation(z):
-    return z ** 2
-
-
-def cube_activation(z):
-    return z ** 3
+str_to_activation = {
+    'sigmoid': sigmoid_activation,
+    'tanh': tanh_activation,
+    'abs': abs_activation,
+    'gauss': gauss_activation,
+    'identity': identity_activation,
+    'sin': sin_activation,
+    'relu': relu_activation,
+    "stepped": stepped_activation,
+}
 
 
 class InvalidActivationFunction(TypeError):
@@ -123,19 +186,20 @@ class ActivationFunctionSet(object):
         self.add('sin', sin_activation)
         self.add('gauss', gauss_activation)
         self.add('relu', relu_activation)
-        self.add('elu', elu_activation)
-        self.add('lelu', lelu_activation)
-        self.add('selu', selu_activation)
-        self.add('softplus', softplus_activation)
+        # self.add('elu', elu_activation)
+        # self.add('lelu', lelu_activation)
+        # self.add('selu', selu_activation)
+        # self.add('softplus', softplus_activation)
         self.add('identity', identity_activation)
-        self.add('clamped', clamped_activation)
-        self.add('inv', inv_activation)
-        self.add('log', log_activation)
-        self.add('exp', exp_activation)
+        # self.add('clamped', clamped_activation)
+        # self.add('inv', inv_activation)
+        # self.add('log', log_activation)
+        # self.add('exp', exp_activation)
         self.add('abs', abs_activation)
-        self.add('hat', hat_activation)
-        self.add('square', square_activation)
-        self.add('cube', cube_activation)
+        self.add('stepped', stepped_activation)
+        # self.add('hat', hat_activation)
+        # self.add('square', square_activation)
+        # self.add('cube', cube_activation)
 
     def add(self, name, function):
         validate_activation(function)

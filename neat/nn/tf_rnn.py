@@ -16,7 +16,7 @@
 
 import numpy as np
 import tensorflow as tf
-from neat.activations import sigmoid_activation
+from neat.activations import sigmoid_activation, tanh_activation, stepped_activation
 
 
 
@@ -48,7 +48,7 @@ class RecurrentNet():
                  hidden_biases, output_biases,
                  batch_size=1,
                  use_current_activs=False,
-                 activation=sigmoid_activation,
+                 activation=tanh_activation,
                  n_internal_steps=1,
                  dtype=tf.float64,
                  device='/cpu:0'):
@@ -124,10 +124,9 @@ class RecurrentNet():
         return self.outputs
 
     @staticmethod
-    def create(genome, config, batch_size=1, activation=sigmoid_activation,
+    def create(genome, config, batch_size=1, activation=tanh_activation,
                prune_empty=False, use_current_activs=False, n_internal_steps=1):
         from neat.graphs import required_for_output
-
         genome_config = config.genome_config
         required = required_for_output(
             genome_config.input_keys, genome_config.output_keys, genome.connections)
